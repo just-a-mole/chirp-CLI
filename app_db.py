@@ -52,3 +52,9 @@ class App:
         data = [first_name, person_id]
         self.mCursor.execute("INSERT INTO first_enemies (first_name, person_id) VALUES (?,?)",data)
         self.mConnection.commit()
+
+    #find/select
+    def findUser(self, email, password):
+        data = [email, password]
+        self.mCursor.execute("SELECT * FROM users WHERE email = ? AND password = ?",data)
+        return self.mCursor.fetchone()

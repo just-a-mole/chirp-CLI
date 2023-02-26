@@ -1,6 +1,6 @@
 import app_db
 
-def homePage():
+def loginPage():
     print("Welcome to Chirp CLI!")
     print()
     print("Login [l]") 
@@ -35,13 +35,50 @@ def login(db):
     db.findUser(email, password)
     return True
 
-def options(first_name, last_name):
+def mainPage(first_name, last_name):
     print("Welcome,",first_name,last_name)
-    print("View feed [v]")
-    print("Post feed [p]")
     print("View friends [f]")
     print("View enemies [e]")
-    print("Add enemies [a]")
     print("Logout [l]")
+
+def friendsPage():
+    print("View first name feed [vf]")
+    print("Post first name feed [pf]")
+    print("List first name friends [lf]")
+    print("View last name feed [vl]")
+    print("Post last name feed [pl]")
+    print("List last name friends [ll]")
+    print("Back [b]")
+    answer = input()
+    answer = getValidInput(answer, ["vf","pf","lf","vl","pl","ll","b"])
+    return answer
+
+def enemiesPage():
+    print("View first name feed [vf]")
+    print("Post first name feed [pf]")
+    print("List first name enemies [lf]")
+    print("Add first name enemies [af]")
+    print("View last name feed [vl]")
+    print("Post last name feed [pl]")
+    print("List last name enemies [ll]")
+    print("Add last name enemies [al]")
+    print("Back [b]")
+    answer = input()
+    answer = getValidInput(answer, ["vf","pf","lf","af","vl","pl","ll","al","b"])
+    return answer
     
+
+#note I think you can be eneies with a freind if war of last name friends are against someone that
+#has your first name ... thats probly fine
+
+#this is a way to do a switch statment in python, very useful in this case
+match answer:
+    case "vf":
+        #view first name feed
+        return
+    case "pf":
+        #post om first name feed
+        return
+    case "lf":
+        #list all first name frinends
 
