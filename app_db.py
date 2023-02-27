@@ -61,8 +61,8 @@ class App:
     def getFirstFriends(self, user_id):
         data = [user_id]
         self.mCursor.execute("SELECT u.first_name, u.last_name "+
-                                "FROM friends f "+
-                                "JOIN users u ON f.friend_id = u.id "+
+                                "FROM friends AS f "+
+                                "JOIN users AS u ON f.friend_id = u.id "+
                                 "WHERE f.user_id = ? "+
                                 "AND f.first = TRUE",data)
         return self.mCursor.fetchall()
@@ -70,8 +70,8 @@ class App:
     def getLastFriends(self, user_id):
         data = [user_id]
         self.mCursor.execute("SELECT u.first_name, u.last_name "+
-                                "FROM friends f "+
-                                "JOIN users u ON f.friend_id = u.id "+
+                                "FROM friends AS f "+
+                                "JOIN users AS u ON f.friend_id = u.id "+
                                 "WHERE f.user_id = ? "+
                                 "AND f.last = TRUE",data)
         return self.mCursor.fetchall()
@@ -80,18 +80,18 @@ class App:
         data = [user_id]
         #IF YOU END UP CHANGING IT UPDATE IT HERE TOO
         self.mCursor.execute("SELECT u.first_name, u.last_name "+
-                                "FROM enemies e "+
-                                "JOIN users u ON e.friend_id = u.id "+
-                                "WHERE f.user_id = ? "+
-                                "AND f.first = TRUE",data)
+                                "FROM enemies AS e "+
+                                "JOIN users AS u ON e.friend_id = u.id "+
+                                "WHERE e.user_id = ? "+
+                                "AND e.first = TRUE",data)
         return self.mCursor.fetchall()
 
     def getLastEnemies(self, user_id):
         data = [user_id]
         #IF YOU END UP CHANGING IT UPDATE IT HERE TOO
         self.mCursor.execute("SELECT u.first_name, u.last_name "+
-                                "FROM enemies e "+
-                                "JOIN users u ON e.friend_id = u.id "+
-                                "WHERE f.user_id = ? "+
-                                "AND f.last = TRUE",data)
+                                "FROM enemies AS e "+
+                                "JOIN users AS u ON e.friend_id = u.id "+
+                                "WHERE e.user_id = ? "+
+                                "AND e.last = TRUE",data)
         return self.mCursor.fetchall()
