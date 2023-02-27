@@ -75,13 +75,18 @@ def enemiesPage():
 #has your first name ... thats probly fine
 
 #this is a way to do a switch statment in python, very useful in this case
-match answer:
-    case "vf":
-        #view first name feed
-        return
-    case "pf":
-        #post om first name feed
-        return
-    case "lf":
-        #list all first name frinends
+
+def main():
+    answer = loginPage()
+    db = app_dp.App()
+    match answer:
+       """ case "vf":
+            #view first name feed
+        case "pf":
+            post om first name feed
+        case "lf":
+            list all first name frinends"""
+        case "l":
+            login(db)
+
 
