@@ -11,3 +11,7 @@ if you have an enemy, and you can declare war
                 friends ---> frienly posts      friends --> friendly posts 
                     |                              |
                  last_name <------ user -----> first_name
+
+To win a war, the group that has more people (of the same name) wins or has the advantage
+in thing we make up later
+

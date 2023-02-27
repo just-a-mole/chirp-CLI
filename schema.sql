@@ -28,21 +28,21 @@ FOREIGN KEY(friend_id) REFERENCES users(id)
 );
 CREATE TABLE friend_first_posts(
 user_id INTEGER,
-post TEXT,
+post TEXT, title TEXT,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
 CREATE TABLE friend_last_posts(
 user_id INTEGER,
-post TEXT,
+post TEXT, title TEXT,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
 CREATE TABLE enemy_first_posts(
 user_id INTEGER,
-post TEXT,
+post TEXT, title TEXT,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
 CREATE TABLE enemy_last_posts(
 user_id INTEGER,
-post TEXT,
+post TEXT, title TEXT,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
