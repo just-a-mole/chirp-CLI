@@ -26,7 +26,7 @@ def signUp(db):
     last_name = input("Enter Last Name: ")
     email = input("Enter Email: ")
     password = input("Enter Password: ")
-    db.createUser(email, password, first_name.lower(),last_name.lower())
+    db.createUser(email, password, first_name.lower().strip(),last_name.lower().strip())
     return True
 
 def login(db):
@@ -40,6 +40,9 @@ def mainPage(first_name, last_name):
     print("View friends [f]")
     print("View enemies [e]")
     print("Logout [l]")
+    answer = input()
+    answer = getValidInput(answer, ["f","e","l"])
+    return answer
 
 def friendsPage():
     print("View first name feed [vf]")
