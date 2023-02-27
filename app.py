@@ -32,7 +32,7 @@ def signUp(db):
 def login(db):
     email = input("Enter Email: ")
     password = input("Enter Password: ")
-    db.findUser(email, password)
+    db.getUserFromEmail(email, password)
     return True
 
 def mainPage(first_name, last_name):
@@ -78,15 +78,21 @@ def enemiesPage():
 
 def main():
     answer = loginPage()
-    db = app_dp.App()
-    match answer:
-       """ case "vf":
+    print(answer)
+    db = app_db.App()
+    if answer == 'l':
+        login(db)
+    elif answer == 's':
+        signUp(db)
+       #case "vf":
             #view first name feed
-        case "pf":
-            post om first name feed
-        case "lf":
-            list all first name frinends"""
-        case "l":
-            login(db)
+        #case "pf":
+           #post om first name feed
+       #case "lf":
+            #list all first name frinends"""
+     #   case "l":
+      #      login(db)
+
+main()
 
 

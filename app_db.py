@@ -11,7 +11,7 @@ class App:
         self.mCursor.execute("INSERT INTO users (first_name, last_name) VALUES (?,?)",data)
         self.mConnection.commit()
         user_id = self.getUserFromName(first_name, last_name)
-        data = [user_id, first_name, last_name]
+        data = [user_id, email, password]
         self.mCursor.execute("INSERT INTO credentials (user_id, password, email) VALUES (?,?,?)",data)
         self.mConnection.commit()
 
@@ -50,13 +50,14 @@ class App:
     #get
     def getUserFromEmail(self, email, password):
         data = [email, password]
-        self.mCursor.execute("SELECT user_id FROM credentials WHERE email = ? AND password = ?",data)
-        return self.mCursor.fetchone()[0]
+        item = self.mCursor.execute("SELECT user_id FROM credentials WHERE email = ? AND password = ?",data)
+        print(item)
+        return item.fetchone()[0]
 
     def getUserFromName(self, first_name, last_name):
         data = [first_name, last_name]
-        self.mCursor.execute("SELECT id FROM users WHERE first_name = ? AND last_name=?",data)
-        return self.mCursor.fetchone()[0]
+        item = self.mCursor.execute("SELECT id FROM users WHERE first_name = ? AND last_name=?",data)
+        return item.fetchone()[0]
 
     def getFirstFriends(self, user_id):
         data = [user_id]
