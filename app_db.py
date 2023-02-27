@@ -7,8 +7,12 @@ class App:
 
     #create
     def createUser(self, email, password, first_name, last_name):
-        data = [email, password, first_name, last_name]
-        self.mCursor.execute("INSERT INTO users (email, password, first_name, last_name) VALUES (?,?,?,?)",data)
+        data = [first_name, last_name]
+        self.mCursor.execute("INSERT INTO users (first_name, last_name) VALUES (?,?)",data)
+        self.mConnection.commit()
+        user_id = self.getUserId(first_name, last_name)
+        data = [user_id, first_name, last_name]
+        self.mCursor.execute("INSERT INTO credentials (user_id, password, email) VALUES (?,?,?)",data)
         self.mConnection.commit()
 
     def createFirstFriendlyPost(self, title, caption, person_id):
@@ -57,4 +61,9 @@ class App:
     def findUser(self, email, password):
         data = [email, password]
         self.mCursor.execute("SELECT * FROM users WHERE email = ? AND password = ?",data)
+        return self.mCursor.fetchone()
+
+    def getUserId(self, first_name, last_name):
+        data = [first_name, last_name]
+        self.mCursor.execute("SELECT id FROM users WHERE first_name = ? AND last_name=?",data)
         return self.mCursor.fetchone()
