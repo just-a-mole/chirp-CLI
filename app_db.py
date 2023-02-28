@@ -6,6 +6,24 @@ class App:
         self.mCursor = self.mConnection.cursor()
 
     #create
+    def updateFriends(self,user_id):
+        data = [user_id,user_id]
+        friends = self.mCursor.execute("SELECT u.id "+
+                             "FROM users u "+
+                             "WHERE u.name = (SELECT name FROM users WHERE id = ? "+
+                             "AND u.id <> ? "+
+                             "AND u.id NOT IN ( "+
+                             "SELECT friend_id FROM friends WHERE user_id = ? "+
+                             ")",data)
+        try:
+            friends = friends.fetchall()
+            for i in range(len(friends)):
+                self.addFriend(user_id,friends[i])
+            return True
+        except TypeError:
+            return False
+
+
     def createUser(self, email, password, first_name):
         data = [first_name]
         self.mCursor.execute("INSERT INTO users (name) VALUES (?)",data)
@@ -25,9 +43,9 @@ class App:
         self.mCursor.execute("INSERT INTO enemy_first_posts (user_id, post, title) VALUES(?,?,?)",data)
         self.mConnection.commit()
 
-    def addFriend(self, user_id, friend_id,first):
-        data = [user_id, friend_id, first]
-        self.mCursor.execute("INSERT INTO friends (user_id, friend_id, name ) VALUES (?,?,?)",data)
+    def addFriend(self, user_id, friend_id):
+        data = [user_id, friend_id]
+        self.mCursor.execute("INSERT INTO friends (user_id, friend_id ) VALUES (?,?)",data)
         self.mConnection.commit()
 
     def addEnemy(self,user_id, enemy_id, first_name):

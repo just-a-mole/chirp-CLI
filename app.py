@@ -90,6 +90,7 @@ def main():
             ID = signUp(db)
         #######
         if ID:
+            db.updateFriends(ID)
             while True:
                 answer = mainPage()
                 if answer == 'f':
