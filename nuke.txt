@@ -1,0 +1,6 @@
+DROP TABLE enemy_posts;
+DROP TABLE friend_posts;
+DROP TABLE enemies;
+DROP TABLE friends;
+DROP TABLE credentials;
+DROP TABLE users

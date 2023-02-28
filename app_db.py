@@ -65,3 +65,5 @@ class App:
                                 "WHERE e.user_id = ? ")
         return self.mCursor.fetchall()
 
+    def viewEnemies(self):
+        self.mCursor.execute
