@@ -16,9 +16,9 @@ FOREIGN KEY(friend_id) REFERENCES users(id)
 );
 CREATE TABLE enemies(
 user_id INTEGER,
-friend_id INTEGER,
+enemy_id INTEGER,
 FOREIGN KEY(user_id) REFERENCES users(id),
-FOREIGN KEY(friend_id) REFERENCES users(id)
+FOREIGN KEY(enemy_id) REFERENCES users(id)
 );
 CREATE TABLE friend_posts(
 user_id INTEGER,
