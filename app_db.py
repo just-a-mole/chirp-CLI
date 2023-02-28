@@ -11,7 +11,7 @@ class App:
         self.mCursor.execute("INSERT INTO users (first_name, last_name) VALUES (?,?)",data)
         self.mConnection.commit()
         user_id = self.getUserFromName(first_name, last_name)
-        data = [user_id, email, password]
+        data = [user_id, password, email]
         self.mCursor.execute("INSERT INTO credentials (user_id, password, email) VALUES (?,?,?)",data)
         self.mConnection.commit()
 

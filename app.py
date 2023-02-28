@@ -77,21 +77,23 @@ def enemiesPage():
 #this is a way to do a switch statment in python, very useful in this case
 
 def main():
-    answer = loginPage()
-    print(answer)
-    db = app_db.App()
-    if answer == 'l':
-        login(db)
-    elif answer == 's':
-        signUp(db)
-       #case "vf":
-            #view first name feed
-        #case "pf":
-           #post om first name feed
-       #case "lf":
-            #list all first name frinends"""
-     #   case "l":
-      #      login(db)
+    running = True
+    while running:
+        answer = loginPage()
+        print(answer)
+        db = app_db.App()
+        if answer == 'l':
+            login(db)
+        elif answer == 's':
+            signUp(db)
+        #case "vf":
+                #view first name feed
+            #case "pf":
+            #post om first name feed
+        #case "lf":
+                #list all first name frinends"""
+        #   case "l":
+        #      login(db)
 
 main()
 
