@@ -14,29 +14,33 @@ def getValidInput(INPUT,valid):
     if INPUT in valid:
         return INPUT
     else:
-        print("That is not a valid option! Try again.")
-        print("OPTIONS: ",valid)
-        INPUT = input()
-        getValidInput(INPUT, valid)
+        while True:
+            print("That is not a valid option! Try again.")
+            print("OPTIONS: ",valid)
+            INPUT = input()
+            if INPUT in valid:
+                return INPUT
 
 def signUp(db):
     print("by signing up understand we will store your password as plain text.")
     print()
     first_name = input("Enter First Name: ")
-    last_name = input("Enter Last Name: ")
     email = input("Enter Email: ")
     password = input("Enter Password: ")
-    db.createUser(email, password, first_name.lower().strip(),last_name.lower().strip())
-    return True
+    db.createUser(email, password, first_name.lower().strip())
+    return db.getUserFromEmail(email,password) 
 
 def login(db):
     email = input("Enter Email: ")
     password = input("Enter Password: ")
-    db.getUserFromEmail(email, password)
-    return True
+    if db.getUserFromEmail(email, password):
+        return db.getUserFromEmail(email,password) 
+    else:
+        print("Your account died in war or doesnt exist.")
+        return 
 
-def mainPage(first_name, last_name):
-    print("Welcome,",first_name,last_name)
+def mainPage():
+    print("Welcome,")
     print("View friends [f]")
     print("View enemies [e]")
     print("Logout [l]")
@@ -48,12 +52,9 @@ def friendsPage():
     print("View first name feed [vf]")
     print("Post first name feed [pf]")
     print("List first name friends [lf]")
-    print("View last name feed [vl]")
-    print("Post last name feed [pl]")
-    print("List last name friends [ll]")
     print("Back [b]")
     answer = input()
-    answer = getValidInput(answer, ["vf","pf","lf","vl","pl","ll","b"])
+    answer = getValidInput(answer, ["vf","pf","lf","b"])
     return answer
 
 def enemiesPage():
@@ -61,13 +62,9 @@ def enemiesPage():
     print("Post first name feed [pf]")
     print("List first name enemies [lf]")
     print("Add first name enemies [af]")
-    print("View last name feed [vl]")
-    print("Post last name feed [pl]")
-    print("List last name enemies [ll]")
-    print("Add last name enemies [al]")
     print("Back [b]")
     answer = input()
-    answer = getValidInput(answer, ["vf","pf","lf","af","vl","pl","ll","al","b"])
+    answer = getValidInput(answer, ["vf","pf","lf","af","b"])
     return answer
     
 
@@ -82,9 +79,17 @@ def main():
         answer = loginPage()
         db = app_db.App()
         if answer == 'l':
-            login(db)
+            id = login(db)
         elif answer == 's':
-            signUp(db)
+            id = signUp(db)
+        #######
+        if id:
+            mainPage()
+            
+        else:
+            print("login failed")
+            
+
         #case "vf":
                 #view first name feed
             #case "pf":

@@ -1,8 +1,6 @@
-sqlite> .schema
 CREATE TABLE users(
 id INTEGER PRIMARY KEY,
-first_name TEXT,
-last_name TEXT
+name TEXT
 );
 CREATE TABLE credentials(
 user_id INTEGER,
@@ -13,36 +11,24 @@ FOREIGN KEY(user_id) REFERENCES users(id)
 CREATE TABLE friends(
 user_id INTEGER,
 friend_id INTEGER,
-first_name BOOLEAN,
-last_name BOOLEAN,
 FOREIGN KEY(user_id) REFERENCES users(id),
 FOREIGN KEY(friend_id) REFERENCES users(id)
 );
 CREATE TABLE enemies(
 user_id INTEGER,
 friend_id INTEGER,
-first_name BOOLEAN,
-last_name BOOLEAN,
 FOREIGN KEY(user_id) REFERENCES users(id),
 FOREIGN KEY(friend_id) REFERENCES users(id)
 );
-CREATE TABLE friend_first_posts(
+CREATE TABLE friend_posts(
 user_id INTEGER,
 post TEXT, title TEXT,
+time TIMESTAMP,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
-CREATE TABLE friend_last_posts(
+CREATE TABLE enemy_posts(
 user_id INTEGER,
 post TEXT, title TEXT,
-FOREIGN KEY(user_id) REFERENCES users(id)
-);
-CREATE TABLE enemy_first_posts(
-user_id INTEGER,
-post TEXT, title TEXT,
-FOREIGN KEY(user_id) REFERENCES users(id)
-);
-CREATE TABLE enemy_last_posts(
-user_id INTEGER,
-post TEXT, title TEXT,
+time TIMESTAMP,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
