@@ -3,7 +3,7 @@ id INTEGER PRIMARY KEY,
 name TEXT
 );
 CREATE TABLE credentials(
-user_id INTEGER,
+user_id INTEGER UNIQUE,
 password TEXT,
 email TEXT,
 FOREIGN KEY(user_id) REFERENCES users(id)
@@ -16,7 +16,7 @@ FOREIGN KEY(friend_id) REFERENCES users(id)
 );
 CREATE TABLE enemies(
 user_id INTEGER,
-enemy_idm INTEGER,
+enemy_id INTEGER,
 FOREIGN KEY(user_id) REFERENCES users(id),
 FOREIGN KEY(enemy_id) REFERENCES users(id)
 );
