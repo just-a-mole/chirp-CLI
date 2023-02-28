@@ -58,13 +58,13 @@ def friendsPage():
     return answer
 
 def enemiesPage():
-    print("View first name feed [vf]")
-    print("Post first name feed [pf]")
-    print("List first name enemies [lf]")
-    print("Add first name enemies [af]")
+    print("View first name feed [ve]")
+    print("Post first name feed [pe]")
+    print("List first name enemies [le]")
+    print("Add first name enemies [ae]")
     print("Back [b]")
     answer = input()
-    answer = getValidInput(answer, ["vf","pf","lf","af","b"])
+    answer = getValidInput(answer, ["ve","pe","le","ae","b"])
     return answer
     
 
@@ -84,20 +84,39 @@ def main():
             id = signUp(db)
         #######
         if id:
-            mainPage()
+            while True:
+                answer = mainPage()
+                if answer == 'f':
+                    key = friendsPage()
+                    if key == 'vf':
+                        # viewFriends(db)
+                        print()
+                    elif key == 'pf':
+                        # postFriends(db)
+                        print()
+                    elif key == 'lf':
+                        # listFriends(db)
+                        print()
+                elif answer == 'e':
+                    key = enemiesPage()
+                    if key == 've':
+                        # viewEnemies(db)
+                        print()
+                    elif key == 'pe':
+                        # postEnemies(db)
+                        print()
+                    elif key == 'le':
+                        # listEnemies(db)
+                        print()
+                    elif key == 'ae':
+                        # addEnemies(db)
+                        print()
+                else:
+                    break
             
         else:
             print("login failed")
             
-
-        #case "vf":
-                #view first name feed
-            #case "pf":
-            #post om first name feed
-        #case "lf":
-                #list all first name frinends"""
-        #   case "l":
-        #      login(db)
 
 main()
 
