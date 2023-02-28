@@ -67,6 +67,9 @@ def enemiesPage():
     answer = getValidInput(answer, ["ve","pe","le","ae","b"])
     return answer
     
+def viewFriends(db,ID):
+    print(db.getFriends(ID))
+
 
 #note I think you can be eneies with a freind if war of last name friends are against someone that
 #has your first name ... thats probly fine
@@ -82,17 +85,17 @@ def main():
         answer = loginPage()
         db = app_db.App()
         if answer == 'l':
-            id = login(db)
+            ID = login(db)
         elif answer == 's':
-            id = signUp(db)
+            ID = signUp(db)
         #######
-        if id:
+        if ID:
             while True:
                 answer = mainPage()
                 if answer == 'f':
                     key = friendsPage()
                     if key == 'vf':
-                        # viewFriends(db)
+                        viewFriends(db,ID)
                         print()
                     elif key == 'pf':
                         # postFriends(db)
