@@ -26,10 +26,15 @@ class App:
 
 
     def createUser(self, email, password, first_name):
-        data = [email]
-        self.mCursor.execute("INSERT INTO users (name) VALUES (?)",data)
+        try:
+            x = self.mCursor.execute("SELECT MAX(id) FROM users")
+            user_id = x.fetchone()[0]
+            user_id += 1
+        except:
+            user_id = 1
+        data = [user_id,email]
+        self.mCursor.execute("INSERT INTO users (id, name) VALUES (?,?)",data)
         self.mConnection.commit()
-        user_id = self.getUserFromName(first_name)
         data = [user_id, password, email]
         self.mCursor.execute("INSERT INTO credentials (user_id, password, email) VALUES (?,?,?)",data)
         self.mConnection.commit()
