@@ -1,0 +1,3 @@
+sqlite3 app.db < nuke.txt
+sqlite3 app.db < create.txt
+app.py < populate.txt

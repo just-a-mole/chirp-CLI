@@ -76,6 +76,9 @@ def viewFriends(db,ID):
 
 #this is a way to do a switch statment in python, very useful in this case
 
+def viewEnemies(db):
+    db.viewEnemies()
+
 def main():
     running = True
     while running:
