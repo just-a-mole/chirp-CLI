@@ -1,9 +1,9 @@
 CREATE TABLE users(
-id INTEGER PRIMARY KEY,
+id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT
 );
 CREATE TABLE credentials(
-user_id INTEGER,
+user_id INTEGER UNIQUE,
 password TEXT,
 email TEXT,
 FOREIGN KEY(user_id) REFERENCES users(id)

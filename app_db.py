@@ -7,25 +7,26 @@ class App:
 
     #create
     def updateFriends(self,user_id):
-        data = [user_id,user_id]
+        data = [user_id, user_id, user_id]
         friends = self.mCursor.execute("SELECT u.id "+
-                             "FROM users u "+
-                             "WHERE u.name = (SELECT name FROM users WHERE id = ? "+
-                             "AND u.id <> ? "+
-                             "AND u.id NOT IN ( "+
-                             "SELECT friend_id FROM friends WHERE user_id = ? "+
-                             ")",data)
+                            "FROM users AS u "+
+                            "WHERE u.name = (SELECT name FROM users WHERE id = ? "+
+                            "AND u.id <> ? "+
+                            "AND u.id NOT IN ( "+
+                            "SELECT friend_id FROM friends WHERE user_id = ?) "+
+                            ")",data)
         try:
             friends = friends.fetchall()
             for i in range(len(friends)):
-                self.addFriend(user_id,friends[i])
+                print(friends)
+                self.addFriend(user_id,friends[i][0])
             return True
         except TypeError:
             return False
 
 
     def createUser(self, email, password, first_name):
-        data = [first_name]
+        data = [email]
         self.mCursor.execute("INSERT INTO users (name) VALUES (?)",data)
         self.mConnection.commit()
         user_id = self.getUserFromName(first_name)
@@ -62,16 +63,16 @@ class App:
         except TypeError:
             return None
 
-    def getUserFromName(self, first_name):
-        data = [first_name]
-        item = self.mCursor.execute("SELECT id FROM users WHERE name = ?",data)
+    def getUserFromName(self, email):
+        data = [email]
+        item = self.mCursor.execute("SELECT email FROM credentials WHERE email = ?",data)
         return item.fetchone()[0]
 
     def getFriends(self, user_id):
         data = [user_id]
-        self.mCursor.execute("SELECT u.name "+
+        self.mCursor.execute("SELECT c.email "+
                                 "FROM friends AS f "+
-                                "JOIN users AS u ON f.friend_id = u.id "+
+                                "JOIN credentials AS c ON f.friend_id = c.user_id "+
                                 "WHERE f.user_id = ? ",data)
         return self.mCursor.fetchall()
 
