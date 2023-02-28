@@ -1,4 +1,7 @@
-all: reset
+all: start
+
+start:
+	python3 app.py
 
 reset: 
 	sqlite3 app.db < nuke.txt

@@ -73,8 +73,8 @@ def enemiesPage():
 
 #this is a way to do a switch statment in python, very useful in this case
 
-def viewEnemies(db):
-    db.viewEnemies()
+def viewEnemies(db, id):
+    print(db.getEnemies(id))
 
 def main():
     running = True
@@ -103,8 +103,8 @@ def main():
                 elif answer == 'e':
                     key = enemiesPage()
                     if key == 've':
-                        # viewEnemies(db)
-                        print()
+                        viewEnemies(db, id)
+                        print(id)
                     elif key == 'pe':
                         # postEnemies(db)
                         print()

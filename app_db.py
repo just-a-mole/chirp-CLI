@@ -61,9 +61,9 @@ class App:
         data = [user_id]
         self.mCursor.execute("SELECT u.name "+
                                 "FROM enemies AS e "+
-                                "JOIN users AS u ON e.enemy_id= u.id "+
+                                "JOIN users AS u ON e.enemy_id = u.id "+
                                 "WHERE e.user_id = ? ")
         return self.mCursor.fetchall()
 
-    def viewEnemies(self):
-        self.mCursor.execute
+    # def viewEnemies(self):
+    #     self.mCursor.execute("SELECT u.name")
