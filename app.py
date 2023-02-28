@@ -80,7 +80,6 @@ def main():
     running = True
     while running:
         answer = loginPage()
-        print(answer)
         db = app_db.App()
         if answer == 'l':
             login(db)
