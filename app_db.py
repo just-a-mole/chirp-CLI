@@ -25,14 +25,14 @@ class App:
             return False
 
 
-    def createUser(self, email, password, first_name):
+    def createUser(self, email, password, name):
         try:
             x = self.mCursor.execute("SELECT MAX(id) FROM users")
             user_id = x.fetchone()[0]
             user_id += 1
         except:
             user_id = 1
-        data = [user_id,email]
+        data = [user_id,name]
         self.mCursor.execute("INSERT INTO users (id, name) VALUES (?,?)",data)
         self.mConnection.commit()
         data = [user_id, password, email]

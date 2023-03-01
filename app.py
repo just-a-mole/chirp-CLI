@@ -95,13 +95,13 @@ def main():
                 answer = mainPage()
                 if answer == 'f':
                     key = friendsPage()
-                    if key == 'vf':
+                    if key == 'lf':
                         viewFriends(db,ID)
                         print()
                     elif key == 'pf':
                         # postFriends(db)
                         print()
-                    elif key == 'lf':
+                    elif key == 'vf':
                         # listFriends(db)
                         print()
                 elif answer == 'e':
