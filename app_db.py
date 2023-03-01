@@ -97,22 +97,20 @@ class App:
         return self.mCursor.fetchall()
 
     def getFriendsFeed(self, user_id):
-        data = [user_id,user_id]
-        self.mCursor.execute("SELECT c.email, fp.title, fp.post, fp.time "+
-        "FROM( "+
-            "SELECT f.friend_id AS feed_id "+
-            "FROM friends AS f "+  
-            "WHERE f.friend_id IN ( "+ 
-                    "SELECT f.friend_id "+
-                    "FROM friends AS f "+
-                    "WHERE f.user_id = ? "+
-                    ") "+ 
-                    "OR ? "+
-            ") AS feed "+
-        "JOIN credentials AS c ON feed.feed_id = c.user_id "+
-        "JOIN friend_posts AS fp ON feed.feed_id = fp.user_id "+
-        "GROUP BY fp.title, fp.post,fp.time "+
-        "ORDER BY fp.time",data)
+        data = [user_id]
+        self.mCursor.execute("""SELECT friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
+                            FROM friends
+                            JOIN friend_posts ON friends.friend_id = friend_posts.user_id
+                            JOIN users ON users.id = friend_posts.user_id
+                            JOIN credentials ON users.id = credentials.user_id
+                            WHERE users.name IN (
+                                SELECT users.name
+                                FROM users
+                                WHERE id = ?
+                                LIMIT 1
+                            )
+                            GROUP BY friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
+                            ORDER BY friend_posts.time DESC""",data)
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):
