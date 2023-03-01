@@ -114,39 +114,26 @@ class App:
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):
-        data = [user_id,user_id]
-        self.mCursor.execute("SELECT c.email, ep.title, ep.post, ep.time "+
-        "FROM( "+
-            "SELECT f.friend_id AS feed_id "+
-            "FROM friends AS f "+  
-            "WHERE f.friend_id IN ( "+ 
-                    "SELECT f.friend_id "+
-                    "FROM friends AS f "+
-                    ""
-                    "WHERE f.user_id = ? "+
-                    ") "+ 
-                    "OR ? "+
-            ") AS feed "+
-        "JOIN credentials AS c ON feed.feed_id = c.user_id "+
-        "JOIN friend_posts AS fp ON feed.feed_id = fp.user_id "+
-        "GROUP BY fp.title, fp.post,fp.time",data)
+        data = [user_id]
+        #doesnt work yet
+        self.mCursor.execute("""SELECT 
+                                enemy_posts.post, 
+                                enemy_posts.title, 
+                                enemy_posts.time, 
+                                credentials.email
+                            FROM friends, enemies
+                            JOIN enemy_posts ON friends.friend_id = enemy_posts.user_id
+                            AND enemies.enemy_id = enemy_posts.user_id
+                            JOIN users ON users.id = enemy_posts.user_id
+                            JOIN credentials ON users.id = credentials.user_id
+                            WHERE users.name IN (
+                                SELECT users.name
+                                FROM users
+                                WHERE id = ?
+                                LIMIT 1
+                            )
+                            GROUP BY enemy_posts.post, enemy_posts.title, enemy_posts.time, credentials.email
+                            ORDER BY enemy_posts.time DESC""",data)
+ 
         return self.mCursor.fetchall()
-
-    """SELECT c.email, ep.title, ep.post, ep.time 
-FROM( 
-SELECT f.friend_id AS friend, e.enemy_id AS enemy 
-FROM friends AS f 
-WHERE f.friend_id IN ( 
-    SELECT f.friend_id
-    FROM friends AS f 
-    WHERE f.user_id = 12 )
-OR 12
-LEFT JOIN enemies AS e ON e.user_id = 12
-) AS feed
-JOIN credentials AS c ON feed.friend = c.user_id
-OR feed.enemy = c.user_id
-JOIN enemy_posts AS ep ON feed.friend = ep.user_id
-OR feed.enemy = ep.user_id
-GROUP BY ep.title, ep.post,ep.time;
-"""
 
