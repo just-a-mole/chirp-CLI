@@ -125,3 +125,21 @@ class App:
         "GROUP BY fp.title, fp.post,fp.time",data)
         return self.mCursor.fetchall()
 
+    """SELECT c.email, ep.title, ep.post, ep.time 
+FROM( 
+SELECT f.friend_id AS friend, e.enemy_id AS enemy 
+FROM friends AS f 
+WHERE f.friend_id IN ( 
+    SELECT f.friend_id
+    FROM friends AS f 
+    WHERE f.user_id = 12 )
+OR 12
+LEFT JOIN enemies AS e ON e.user_id = 12
+) AS feed
+JOIN credentials AS c ON feed.friend = c.user_id
+OR feed.enemy = c.user_id
+JOIN enemy_posts AS ep ON feed.friend = ep.user_id
+OR feed.enemy = ep.user_id
+GROUP BY ep.title, ep.post,ep.time;
+"""
+
