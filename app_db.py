@@ -54,10 +54,22 @@ class App:
         self.mCursor.execute("INSERT INTO friends (user_id, friend_id ) VALUES (?,?)",data)
         self.mConnection.commit()
 
-    def addEnemy(self,user_id, enemy_id, name):
-        data = [user_id, enemy_id, name]
-        self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id,name) VALUES (?,?,?)",data)
+    def makeEnemy(self, name, ID):
+        data = [name, ID]
+        self.mCursor.execute("SELECT users.id FROM users WHERE users.name = ? AND users.name NOT IN (SELECT name FROM users WHERE users.id = ? LIMIT 1)", data)
+        users = self.mCursor.fetchall()
+        try:
+            for i in range(len(users)):
+                self.addEnemy(ID, users[i][0])
+        except TypeError:
+            return None
+
+
+    def addEnemy(self,user_id, enemy_id):
+        data = [user_id, enemy_id]
+        self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id) VALUES (?,?)",data)
         self.mConnection.commit()
+        print("success")
 
     #get
     def getUserFromEmail(self, email, password):
@@ -67,11 +79,6 @@ class App:
             return item.fetchone()[0]
         except TypeError:
             return None
-
-    # def getUserFromName(self, email):
-    #     data = [email]
-    #     item = self.mCursor.execute("SELECT email FROM credentials WHERE email = ?",data)
-    #     return item.fetchone()[0]
 
     def getFriends(self, user_id):
         data = [user_id]
@@ -104,7 +111,8 @@ class App:
             ") AS feed "+
         "JOIN credentials AS c ON feed.feed_id = c.user_id "+
         "JOIN friend_posts AS fp ON feed.feed_id = fp.user_id "+
-        "GROUP BY fp.title, fp.post,fp.time",data)
+        "GROUP BY fp.title, fp.post,fp.time "+
+        "ORDER BY fp.time",data)
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):
@@ -116,6 +124,7 @@ class App:
             "WHERE f.friend_id IN ( "+ 
                     "SELECT f.friend_id "+
                     "FROM friends AS f "+
+                    ""
                     "WHERE f.user_id = ? "+
                     ") "+ 
                     "OR ? "+
