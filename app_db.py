@@ -46,7 +46,7 @@ class App:
 
     def createEnemyPost(self, user_id, post, title):
         data = [user_id,post,title]
-        self.mCursor.execute("INSERT INTO enemy_first_posts (user_id, post, title,time) VALUES(?,?,?,TIME('now'))",data)
+        self.mCursor.execute("INSERT INTO enemy_posts (user_id, post, title,time) VALUES(?,?,?,TIME('now'))",data)
         self.mConnection.commit()
 
     def addFriend(self, user_id, friend_id):
