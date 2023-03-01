@@ -131,6 +131,10 @@ def viewEnemiesFeed(db,ID):
     except TypeError:
         print("no posts")
 
+def makeEnemy(db, ID):
+    print("Who would you like to add")
+    name = input()
+    user_id = db.makeEnemy(name, ID)
 
 
 def main():
@@ -170,7 +174,7 @@ def main():
                         listEnemies(db, ID)
                         print()
                     elif key == 'ae':
-                        # addEnemies(db)
+                        makeEnemy(db, ID)
                         print()
                 else:
                     break
