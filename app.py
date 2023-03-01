@@ -49,35 +49,63 @@ def mainPage():
     return answer
 
 def friendsPage():
-    print("View first name feed [vf]")
-    print("Post first name feed [pf]")
-    print("List first name friends [lf]")
+    print("FRIENDS")
+    print("View feed [vf]")
+    print("Post feed [pf]")
+    print("List friends [lf]")
     print("Back [b]")
     answer = input()
     answer = getValidInput(answer, ["vf","pf","lf","b"])
     return answer
 
 def enemiesPage():
-    print("View first name feed [ve]")
-    print("Post first name feed [pe]")
-    print("List first name enemies [le]")
-    print("Add first name enemies [ae]")
+    print("ENEMIES")
+    print("View feed [ve]")
+    print("Post feed [pe]")
+    print("List enemies [le]")
+    print("Add enemies [ae]")
     print("Back [b]")
     answer = input()
     answer = getValidInput(answer, ["ve","pe","le","ae","b"])
     return answer
     
-def viewFriends(db,ID):
+def listFriends(db,ID):
     print(db.getFriends(ID))
 
+def postFriends(db, ID):
+    print("POST TO FRIENDS")
+    title = input("Title: ")
+    post = input("Content: ")
+    db.createFriendPost(ID,post,title)
+    print("SUCCESS!")
+    print()
+
+def viewFriendsFeed(db,ID):
+    print("FRIENDS FREED")
+    feed = db.getFriendsFeed(ID)
+    try:
+        for post in feed:
+            email = post[0]
+            title = post[1]
+            content = post[2]
+            time = post[3]
+            print(email, "POSTED: ")
+            print("*"+title+"*")
+            print(content)
+            print("--"+time)
+    except TypeError:
+        print("no posts")
+
+
+    
 
 #note I think you can be eneies with a freind if war of last name friends are against someone that
 #has your first name ... thats probly fine
 
 #this is a way to do a switch statment in python, very useful in this case
 
-def viewEnemies(db, id):
-    print(db.getEnemies(id))
+def listEnemies(db, ID):
+    print(db.getEnemies(ID))
 
 def main():
     running = True
@@ -95,25 +123,25 @@ def main():
                 answer = mainPage()
                 if answer == 'f':
                     key = friendsPage()
-                    if key == 'lf':
-                        viewFriends(db,ID)
+                    if key == 'vf':
+                        viewFriendsFeed(db,ID)
                         print()
                     elif key == 'pf':
-                        # postFriends(db)
+                        postFriends(db,ID)
                         print()
-                    elif key == 'vf':
-                        # listFriends(db)
+                    elif key == 'lf':
+                        listFriends(db,ID)
                         print()
                 elif answer == 'e':
                     key = enemiesPage()
                     if key == 've':
-                        viewEnemies(db, id)
-                        print(id)
+                        # viewEnemiesFeed(db)
+                        print()
                     elif key == 'pe':
                         # postEnemies(db)
                         print()
                     elif key == 'le':
-                        # listEnemies(db)
+                        listEnemies(db, ID)
                         print()
                     elif key == 'ae':
                         # addEnemies(db)

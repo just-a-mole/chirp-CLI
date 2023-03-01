@@ -16,3 +16,6 @@ nuke:
 
 create:
 	sqlite3 app.db < create.txt
+
+posts:
+	python3 app.py < createPosts.txt

@@ -18,7 +18,6 @@ class App:
         try:
             friends = friends.fetchall()
             for i in range(len(friends)):
-                print(friends)
                 self.addFriend(user_id,friends[i][0])
             return True
         except TypeError:
@@ -41,8 +40,9 @@ class App:
 
     def createFriendPost(self, user_id, post, title):
         data = [user_id,post,title]
-        self.mCursor.execute("INSERT INTO friend_first_posts (user_id, post, title) VALUES(?,?,?)",data)
+        self.mCursor.execute("INSERT INTO friend_posts (user_id, post, title, time) VALUES(?,?,?,TIME('now'))",data)
         self.mConnection.commit()
+        return True
 
     def createEnemyPost(self, user_id, post, title):
         data = [user_id,post,title]
@@ -68,10 +68,10 @@ class App:
         except TypeError:
             return None
 
-    def getUserFromName(self, email):
-        data = [email]
-        item = self.mCursor.execute("SELECT email FROM credentials WHERE email = ?",data)
-        return item.fetchone()[0]
+    # def getUserFromName(self, email):
+    #     data = [email]
+    #     item = self.mCursor.execute("SELECT email FROM credentials WHERE email = ?",data)
+    #     return item.fetchone()[0]
 
     def getFriends(self, user_id):
         data = [user_id]
@@ -91,3 +91,21 @@ class App:
 
     # def viewEnemies(self):
     #     self.mCursor.execute("SELECT u.name")
+    def getFriendsFeed(self, user_id):
+        data = [user_id,user_id]
+        self.mCursor.execute("SELECT c.email, fp.title, fp.post, fp.time "+
+        "FROM( "+
+            "SELECT f.friend_id AS feed_id "+
+            "FROM friends AS f "+ 
+            "WHERE f.friend_id IN ( "+ 
+                    "SELECT f.friend_id "+
+                    "FROM friends AS f "+
+                    "WHERE f.user_id = ? "+
+                    ") "+ 
+                    "OR ? "+
+            ") AS feed "+
+        "JOIN credentials AS c ON feed.feed_id = c.user_id "+
+        "JOIN friend_posts AS fp ON feed.feed_id = fp.user_id "+
+        "GROUP BY fp.title, fp.post,fp.time",data)
+        return self.mCursor.fetchall()
+
