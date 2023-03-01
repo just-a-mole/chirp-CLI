@@ -46,7 +46,7 @@ class App:
 
     def createEnemyPost(self, user_id, post, title):
         data = [user_id,post,title]
-        self.mCursor.execute("INSERT INTO enemy_first_posts (user_id, post, title) VALUES(?,?,?)",data)
+        self.mCursor.execute("INSERT INTO enemy_first_posts (user_id, post, title,time) VALUES(?,?,?,TIME('now'))",data)
         self.mConnection.commit()
 
     def addFriend(self, user_id, friend_id):
@@ -54,8 +54,8 @@ class App:
         self.mCursor.execute("INSERT INTO friends (user_id, friend_id ) VALUES (?,?)",data)
         self.mConnection.commit()
 
-    def addEnemy(self,user_id, enemy_id, first_name):
-        data = [user_id, enemy_id, first_name]
+    def addEnemy(self,user_id, enemy_id, name):
+        data = [user_id, enemy_id, name]
         self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id,name) VALUES (?,?,?)",data)
         self.mConnection.commit()
 
@@ -89,14 +89,30 @@ class App:
                                 "WHERE e.user_id = ? ",data)
         return self.mCursor.fetchall()
 
-    # def viewEnemies(self):
-    #     self.mCursor.execute("SELECT u.name")
     def getFriendsFeed(self, user_id):
         data = [user_id,user_id]
         self.mCursor.execute("SELECT c.email, fp.title, fp.post, fp.time "+
         "FROM( "+
             "SELECT f.friend_id AS feed_id "+
-            "FROM friends AS f "+ 
+            "FROM friends AS f "+  
+            "WHERE f.friend_id IN ( "+ 
+                    "SELECT f.friend_id "+
+                    "FROM friends AS f "+
+                    "WHERE f.user_id = ? "+
+                    ") "+ 
+                    "OR ? "+
+            ") AS feed "+
+        "JOIN credentials AS c ON feed.feed_id = c.user_id "+
+        "JOIN friend_posts AS fp ON feed.feed_id = fp.user_id "+
+        "GROUP BY fp.title, fp.post,fp.time",data)
+        return self.mCursor.fetchall()
+
+    def getEnemiesFeed(self, user_id):
+        data = [user_id,user_id]
+        self.mCursor.execute("SELECT c.email, ep.title, ep.post, ep.time "+
+        "FROM( "+
+            "SELECT f.friend_id AS feed_id "+
+            "FROM friends AS f "+  
             "WHERE f.friend_id IN ( "+ 
                     "SELECT f.friend_id "+
                     "FROM friends AS f "+

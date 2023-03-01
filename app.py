@@ -107,6 +107,32 @@ def viewFriendsFeed(db,ID):
 def listEnemies(db, ID):
     print(db.getEnemies(ID))
 
+def postEnemies(db, ID):
+    print("POST TO ENEMIES")
+    title = input("Title: ")
+    post = input("Content: ")
+    db.createEnemyPost(ID,post,title)
+    print("SUCCESS!")
+    print()
+
+def viewEnemiesFeed(db,ID):
+    print("ENEMIES FREED")
+    feed = db.getEnemiesFeed(ID)
+    try:
+        for post in feed:
+            email = post[0]
+            title = post[1]
+            content = post[2]
+            time = post[3]
+            print(email, "POSTED: ")
+            print("*"+title+"*")
+            print(content)
+            print("--"+time)
+    except TypeError:
+        print("no posts")
+
+
+
 def main():
     running = True
     while running:
@@ -135,10 +161,10 @@ def main():
                 elif answer == 'e':
                     key = enemiesPage()
                     if key == 've':
-                        # viewEnemiesFeed(db)
+                        viewEnemiesFeed(db,ID)
                         print()
                     elif key == 'pe':
-                        # postEnemies(db)
+                        postEnemies(db,ID)
                         print()
                     elif key == 'le':
                         listEnemies(db, ID)
