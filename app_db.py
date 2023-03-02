@@ -55,12 +55,33 @@ class App:
         self.mConnection.commit()
 
     def makeEnemy(self, name, ID):
-        data = [name, ID]
-        self.mCursor.execute("SELECT users.id FROM users WHERE users.name = ? AND users.name NOT IN (SELECT name FROM users WHERE users.id = ? LIMIT 1)", data)
-        users = self.mCursor.fetchall()
+        data = [ID]
+        self.mCursor.execute(""" SELECT users.id
+                                FROM users 
+                                WHERE users.name IN(
+                                    SELECT users.name
+                                    FROM users
+                                    WHERE users.id = ?
+                                )""", data)
+        friends = self.mCursor.fetchall()
         try:
-            for i in range(len(users)):
-                self.addEnemy(ID, users[i][0])
+            for i in range(len(friends)):
+                data = [name, friends[i][0]]
+                self.mCursor.execute("""SELECT users.id 
+                                        FROM users 
+                                        WHERE users.name = ? AND users.name NOT IN (
+                                            SELECT name 
+                                            FROM users 
+                                            WHERE users.id = ? 
+                                            LIMIT 1
+                                            )""", data)
+                users = self.mCursor.fetchall()
+                try:
+                    for j in range(len(users)):
+                        print(users[j][0])
+                        self.addEnemy(ID, users[j][0])
+                except TypeError:
+                    return None
         except TypeError:
             return None
 
@@ -69,7 +90,6 @@ class App:
         data = [user_id, enemy_id]
         self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id) VALUES (?,?)",data)
         self.mConnection.commit()
-        print("success")
 
     #get
     def getUserFromEmail(self, email, password):
@@ -135,6 +155,5 @@ class App:
                             JOIN credentials AS c ON c.user_id = feed.feed_id
                             GROUP BY ep.post, ep.title, ep.time, c.email
                             ORDER BY ep.time DESC""",data)
- 
         return self.mCursor.fetchall()
 
