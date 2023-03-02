@@ -55,12 +55,33 @@ class App:
         self.mConnection.commit()
 
     def makeEnemy(self, name, ID):
-        data = [name, ID]
-        self.mCursor.execute("SELECT users.id FROM users WHERE users.name = ? AND users.name NOT IN (SELECT name FROM users WHERE users.id = ? LIMIT 1)", data)
-        users = self.mCursor.fetchall()
+        data = [ID]
+        self.mCursor.execute(""" SELECT users.id
+                                FROM users 
+                                WHERE users.name IN(
+                                    SELECT users.name
+                                    FROM users
+                                    WHERE users.id = ?
+                                )""", data)
+        friends = self.mCursor.fetchall()
         try:
-            for i in range(len(users)):
-                self.addEnemy(ID, users[i][0])
+            for i in range(len(friends)):
+                data = [name, friends[i][0]]
+                self.mCursor.execute("""SELECT users.id 
+                                        FROM users 
+                                        WHERE users.name = ? AND users.name NOT IN (
+                                            SELECT name 
+                                            FROM users 
+                                            WHERE users.id = ? 
+                                            LIMIT 1
+                                            )""", data)
+                users = self.mCursor.fetchall()
+                try:
+                    for j in range(len(users)):
+                        print(users[j][0])
+                        self.addEnemy(ID, users[j][0])
+                except TypeError:
+                    return None
         except TypeError:
             return None
 
@@ -69,7 +90,6 @@ class App:
         data = [user_id, enemy_id]
         self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id) VALUES (?,?)",data)
         self.mConnection.commit()
-        print("success")
 
     #get
     def getUserFromEmail(self, email, password):
@@ -114,26 +134,6 @@ class App:
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):
-        data = [user_id]
-        #doesnt work yet
-        self.mCursor.execute("""SELECT 
-                                enemy_posts.post, 
-                                enemy_posts.title, 
-                                enemy_posts.time, 
-                                credentials.email
-                            FROM friends, enemies
-                            JOIN enemy_posts ON friends.friend_id = enemy_posts.user_id
-                            AND enemies.enemy_id = enemy_posts.user_id
-                            JOIN users ON users.id = enemy_posts.user_id
-                            JOIN credentials ON users.id = credentials.user_id
-                            WHERE users.name IN (
-                                SELECT users.name
-                                FROM users
-                                WHERE id = ?
-                                LIMIT 1
-                            )
-                            GROUP BY enemy_posts.post, enemy_posts.title, enemy_posts.time, credentials.email
-                            ORDER BY enemy_posts.time DESC""",data)
- 
+        self.mCursor.execute("SELECT * FROM enemy_posts ORDER BY enemy_posts.time DESC")
         return self.mCursor.fetchall()
 
