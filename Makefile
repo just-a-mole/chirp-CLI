@@ -19,3 +19,6 @@ create:
 
 posts:
 	python3 app.py < createPosts.txt
+
+test:
+	sqlite3 app.db < test.txt

@@ -114,26 +114,27 @@ class App:
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):
-        data = [user_id]
+        data = [user_id,user_id,user_id]
         #doesnt work yet
         self.mCursor.execute("""SELECT 
-                                enemy_posts.post, 
-                                enemy_posts.title, 
-                                enemy_posts.time, 
-                                credentials.email
-                            FROM friends, enemies
-                            JOIN enemy_posts ON friends.friend_id = enemy_posts.user_id
-                            AND enemies.enemy_id = enemy_posts.user_id
-                            JOIN users ON users.id = enemy_posts.user_id
-                            JOIN credentials ON users.id = credentials.user_id
-                            WHERE users.name IN (
-                                SELECT users.name
+                                ep.post, 
+                                ep.title, 
+                                ep.time, 
+                                c.email
+                            FROM(
+                                SELECT id AS feed_id
                                 FROM users
-                                WHERE id = ?
-                                LIMIT 1
-                            )
-                            GROUP BY enemy_posts.post, enemy_posts.title, enemy_posts.time, credentials.email
-                            ORDER BY enemy_posts.time DESC""",data)
+                                WHERE id OR ?
+                                OR
+                                 id IN(SELECT friend_id FROM friends AS f WHERE f.user_id = ?)
+                                 OR
+                                   id IN(SELECT enemy_id FROM enemies AS e WHERE e.user_id = ?)
+                                    
+                                )AS feed
+                            JOIN enemy_posts AS ep ON ep.user_id = feed.feed_id
+                            JOIN credentials AS c ON c.user_id = feed.feed_id
+                            GROUP BY ep.post, ep.title, ep.time, c.email
+                            ORDER BY ep.time DESC""",data)
  
         return self.mCursor.fetchall()
 

@@ -1,12 +1,15 @@
 l
 DEVIL2@mail
 123
-f
-pf
+e
+ae
+chaz
+e
+pe
 Happy Birthday
 its my birthday
-f
-pf
+e
+pe
 YO IT IS MY BIRTHDAY
 happy b-day to me
 l
@@ -14,8 +17,8 @@ l
 l
 DEVIL3@mail
 123
-f
-pf
+e
+pe
 Happy Halloween
 its halloween
 l
@@ -23,8 +26,8 @@ l
 l
 DEVIL4@mail
 123
-f
-pf
+e
+pe
 Merry Christmas
 its christmas
 l
@@ -32,8 +35,8 @@ l
 l
 DEVIL5@mail
 123
-f
-pf
+e
+pe
 Happy Easter
 its easter
 l
@@ -41,8 +44,17 @@ l
 l
 DEVIL6@mail
 123
-f
-pf
+e
+pe
 What?
 idk what yall talking about?
+l
+
+l
+chaz1@mail
+123
+e
+pe
+THIS IS CHAZ
+hello devil
 l
