@@ -1,30 +1,28 @@
+                            /*checks for user's name and enemy's name and gets posts based off that*/ 
                             SELECT 
                                 ep.post, 
                                 ep.title, 
                                 ep.time, 
                                 c.email
                             FROM(
-                                SELECT id AS feed_id, name AS feed_name
-                                FROM users AS u
-                                WHERE id = ?
-                                OR
-                                 id IN(SELECT friend_id FROM friends AS f WHERE f.user_id = ?)
-                                 OR
-                                   id IN(SELECT enemy_id FROM enemies AS e WHERE e.user_id = ?)
-                                    
-                                )AS feed
-                                WHERE feed.name IN (
-                                SELECT u.name, e.name
-                                FROM users AS u
-                                JOIN enemies AS e ON u.id = e.user_id
-                                JOIN users AS ue on ue.id = e.enemy_id
-                                WHERE u.id = ?
-                                )
-                                OR feed.name IN(
-                                SELECT e.name
-                                FROM enemies
-                                JOIN users AS u ON u.id = e.user_id
-                            JOIN enemy_posts AS ep ON ep.user_id = feed.feed_id
-                            JOIN credentials AS c ON c.user_id = feed.feed_id
-                            GROUP BY ep.post, ep.title, ep.time, c.email
-                            ORDER BY ep.time DESC
+                               SELECT
+                               u.id AS id
+                               FROM users u
+                               WHERE u.name IN(
+                               SELECT u.name
+                               from users u 
+                               JOIN enemies e ON u.id = e.user_id
+                               JOIN users enemy ON e.enemy_id = enemy.id 
+                               WHERE u.name IN (Select u.name From users where id =1)
+                               )
+                               OR u.name IN(
+                               SELECT enemy.name
+                               from users u 
+                               JOIN enemies e ON u.id = e.user_id
+                               JOIN users enemy ON e.enemy_id = enemy.id 
+                               WHERE u.name IN (Select u.name From users where id =1)
+                               )
+                               )as feed
+                               JOIN credentials c ON c.user_id = feed.id
+                               JOIN enemy_posts ep ON ep.user_id = feed.id;
+

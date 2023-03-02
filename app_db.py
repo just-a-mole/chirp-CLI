@@ -134,26 +134,33 @@ class App:
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):
-        data = [user_id,user_id,user_id]
-        #doesnt work yet
+        data = [user_id,user_id]
         self.mCursor.execute("""SELECT 
                                 ep.post, 
                                 ep.title, 
                                 ep.time, 
                                 c.email
                             FROM(
-                                SELECT id AS feed_id
-                                FROM users
-                                WHERE id OR ?
-                                OR
-                                 id IN(SELECT friend_id FROM friends AS f WHERE f.user_id = ?)
-                                 OR
-                                   id IN(SELECT enemy_id FROM enemies AS e WHERE e.user_id = ?)
-                                    
-                                )AS feed
-                            JOIN enemy_posts AS ep ON ep.user_id = feed.feed_id
-                            JOIN credentials AS c ON c.user_id = feed.feed_id
-                            GROUP BY ep.post, ep.title, ep.time, c.email
-                            ORDER BY ep.time DESC""",data)
+                               SELECT
+                               u.id AS id
+                               FROM users u
+                               WHERE u.name IN(
+                               SELECT u.name
+                               from users u 
+                               JOIN enemies e ON u.id = e.user_id
+                               JOIN users enemy ON e.enemy_id = enemy.id 
+                               WHERE u.name IN (Select u.name From users where id =?)
+                               )
+                               OR u.name IN(
+                               SELECT enemy.name
+                               from users u 
+                               JOIN enemies e ON u.id = e.user_id
+                               JOIN users enemy ON e.enemy_id = enemy.id 
+                               WHERE u.name IN (Select u.name From users where id =?)
+                               )
+                               )as feed
+                               JOIN credentials c ON c.user_id = feed.id
+                               JOIN enemy_posts ep ON ep.user_id = feed.id
+                                ORDER BY ep.time DESC""",data)
         return self.mCursor.fetchall()
 
