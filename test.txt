@@ -58,4 +58,4 @@ JOIN(
     ON e.user_id = other_guy.id
 LIMIT 1;
 
-
+SELECT name FROM users WHERE id = 11;

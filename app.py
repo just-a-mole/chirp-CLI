@@ -39,8 +39,9 @@ def login(db):
         print("Your account died in war or doesnt exist.")
         return 
 
-def mainPage():
-    print("Welcome,")
+def mainPage(db, ID):
+    name = db.getName(ID)[0]
+    print("Welcome,",name)
     print("View friends [f]")
     print("View enemies [e]")
     print("Logout [l]")
@@ -171,6 +172,7 @@ def war(db, ID):
         print()
         return
     print("Welcome to the battle field: ")
+    print("you")
     listFriends(db, ID)
     print("vs")
     listEnemies(db, ID)
@@ -189,7 +191,7 @@ def main():
         if ID:
             db.updateFriends(ID)
             while True:
-                answer = mainPage()
+                answer = mainPage(db,ID)
                 if answer == 'f':
                     key = friendsPage()
                     if key == 'vf':

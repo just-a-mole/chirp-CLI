@@ -86,19 +86,11 @@ class App:
         ##
         try:
             if guy_id:
-                #honestly I dont know why this doesnt work
-                #it gets none for guy_id but with the same parameter
-                #in the test.txt it works like a charm??
-                #didnt break anything tho
-                #if a user trys to add someone who already has an enemy
-                #it goes to the except clause
-                print(self.mCursor.fetchone(), data) 
-                e = self.mCursor.fetchone()[0]
-                other_guy = self.getEnemy(e)[0]
-                print(name, "already has an enemy",other_guy," try someone else")
+                print(guy_id, data) 
+                e = guy_id[0]
+                other_guy = self.getName(e)[0]
+                print(name, "already has an enemy",other_guy,"try someone else")
                 return True
-            print(users)
-            print(enemies)
             #check if you put your own name in lol
             friend = users[0][0]
             for i in range(len(enemies)):
@@ -186,6 +178,11 @@ class App:
                                     WHERE e.user_id = ?
                                     LIMIT 1
                                     """,data)
+        return self.mCursor.fetchone()
+
+    def getName(self, user_id):
+        data = [user_id]
+        self.mCursor.execute("SELECT name FROM users WHERE id = ? LIMIT 1",data)
         return self.mCursor.fetchone()
 
     def getFriendsFeed(self, user_id):
