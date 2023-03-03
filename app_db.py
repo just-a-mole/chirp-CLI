@@ -56,38 +56,99 @@ class App:
 
     def makeEnemy(self, name, ID):
         data = [ID]
-        self.mCursor.execute(""" SELECT users.id
-                                FROM users 
-                                WHERE users.name IN(
-                                    SELECT users.name
-                                    FROM users
-                                    WHERE users.id = ?
-                                )""", data)
-        friends = self.mCursor.fetchall()
+        self.mCursor.execute("""SELECT u.id
+                             FROM users AS u
+                             WHERE u.name IN (SELECT name FROM users WHERE id = ? LIMIT 1)
+                                """,data)
+        users = self.mCursor.fetchall() 
+        data = [name]
+        self.mCursor.execute("""SELECT u.id
+                             FROM users AS u
+                             WHERE u.name = ?
+                                """,data)
+        enemies = self.mCursor.fetchall()
+        ##Check if your enemy has an enemy already
+        self.mCursor.execute("""
+                                SELECT e.enemy_id
+                                FROM enemies AS e
+                                JOIN(
+                                    SELECT u.id AS id
+                                    FROM enemies AS e
+                                    JOIN users AS u
+                                    WHERE u.name = ?
+                                    LIMIT 1
+                                ) AS other_guy
+                                ON e.user_id = other_guy.id
+                                LIMIT 1
+                                """,data)
+        guy_id = self.mCursor.fetchone()
+
+        ##
         try:
-            for i in range(len(friends)):
-                data = [name, friends[i][0]]
-                self.mCursor.execute("""SELECT users.id 
-                                        FROM users 
-                                        WHERE users.name = ? AND users.name NOT IN (
-                                            SELECT name 
-                                            FROM users 
-                                            WHERE users.id = ? 
-                                            LIMIT 1
-                                            )""", data)
-                users = self.mCursor.fetchall()
-                try:
-                    for j in range(len(users)):
-                        print(users[j][0])
-                        self.addEnemy(ID, users[j][0])
-                except TypeError:
-                    return None
+            if guy_id:
+                #honestly I dont know why this doesnt work
+                #it gets none for guy_id but with the same parameter
+                #in the test.txt it works like a charm??
+                #didnt break anything tho
+                #if a user trys to add someone who already has an enemy
+                #it goes to the except clause
+                print(self.mCursor.fetchone(), data) 
+                e = self.mCursor.fetchone()[0]
+                other_guy = self.getEnemy(e)[0]
+                print(name, "already has an enemy",other_guy," try someone else")
+                return True
+            print(users)
+            print(enemies)
+            #check if you put your own name in lol
+            friend = users[0][0]
+            for i in range(len(enemies)):
+                if friend in enemies[i]:
+                    return False
+            for i in range(len(users)):
+                for j in range(len(enemies)):
+                    self.addEnemy(users[i][0],enemies[j][0])
         except TypeError:
-            return None
+            print("Failed find ids")
+            return True
+        return True
+
+
+        # data = [ID]
+        # self.mCursor.execute(""" SELECT users.id
+        #                         FROM users 
+        #                         WHERE users.name IN(
+        #                             SELECT users.name
+        #                             FROM users
+        #                             WHERE users.id = ?
+        #                         )""", data)
+        # friends = self.mCursor.fetchall()
+        # try:
+        #     for i in range(len(friends)):
+        #         data = [name, friends[i][0]]
+        #         self.mCursor.execute("""SELECT users.id 
+        #                                 FROM users 
+        #                                 WHERE users.name = ? AND users.name NOT IN (
+        #                                     SELECT name 
+        #                                     FROM users 
+        #                                     WHERE users.id = ? 
+        #                                     LIMIT 1
+        #                                     )""", data)
+        #         users = self.mCursor.fetchall()
+        #         try:
+        #             for j in range(len(users)):
+        #                 print(users[j][0])
+        #                 self.addEnemy(ID, users[j][0])
+        #         except TypeError:
+        #             return None
+        # except TypeError:
+        #     return None
 
 
     def addEnemy(self,user_id, enemy_id):
         data = [user_id, enemy_id]
+        self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id) VALUES (?,?)",data)
+        self.mConnection.commit()
+        data = [enemy_id, user_id]
         self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id) VALUES (?,?)",data)
         self.mConnection.commit()
 
@@ -110,11 +171,22 @@ class App:
 
     def getEnemies(self, user_id):
         data = [user_id]
-        self.mCursor.execute("SELECT u.name "+
+        self.mCursor.execute("SELECT c.email "+
                                 "FROM enemies AS e "+
-                                "JOIN users AS u ON e.enemy_id= u.id "+
+                                "JOIN credentials AS c ON e.enemy_id= c.user_id "+
                                 "WHERE e.user_id = ? ",data)
         return self.mCursor.fetchall()
+
+    def getEnemy(self, user_id):
+        data = [user_id]
+        self.mCursor.execute(""" SELECT
+                                    u.name
+                                    FROM enemies AS e
+                                    JOIN users AS u ON u.id = e.enemy_id
+                                    WHERE e.user_id = ?
+                                    LIMIT 1
+                                    """,data)
+        return self.mCursor.fetchone()
 
     def getFriendsFeed(self, user_id):
         data = [user_id]

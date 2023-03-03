@@ -64,13 +64,19 @@ def enemiesPage():
     print("Post feed [pe]")
     print("List enemies [le]")
     print("Add enemies [ae]")
+    print("WAR!!! [w]")
     print("Back [b]")
     answer = input()
-    answer = getValidInput(answer, ["ve","pe","le","ae","b"])
+    answer = getValidInput(answer, ["ve","pe","le","ae","w","b"])
     return answer
     
 def listFriends(db,ID):
-    print(db.getFriends(ID))
+    friends = db.getFriends(ID)
+    if friends:
+        for i in range(len(friends)):
+            print(friends[i][0])
+    else:
+        print("you have no friends :(")
 
 def postFriends(db, ID):
     print("POST TO FRIENDS")
@@ -105,7 +111,12 @@ def viewFriendsFeed(db,ID):
 #this is a way to do a switch statment in python, very useful in this case
 
 def listEnemies(db, ID):
-    print(db.getEnemies(ID))
+    enemies = db.getEnemies(ID)
+    if enemies:
+        for i in range(len(enemies)):
+            print(enemies[i][0])
+    else:
+        print("you dont have any enemies go add some!")
 
 def postEnemies(db, ID):
     print("POST TO ENEMIES")
@@ -132,9 +143,37 @@ def viewEnemiesFeed(db,ID):
         print("no posts")
 
 def makeEnemy(db, ID):
+    enemy = db.getEnemy(ID)
+    if enemy:
+        print("You are aleady enemies with", enemy[0])
+        return
     print("Who would you like to add")
     name = input()
-    user_id = db.makeEnemy(name, ID)
+    made = db.makeEnemy(name, ID)
+    if not made:
+        print("You cant go to war with yourself / friends " )
+
+def war(db, ID):
+    enemies = db.getEnemies(ID)
+    if not enemies:
+        print("you have no enemies, add enemies to go to war.")
+        return
+    print("WAR!!!")
+    print("by declaring war you have a chance of loosing")
+    print("and having your account deleted")
+    print("do you wish to continue?")
+    print("YES, LETS DO THIS!!! [y]")
+    print("no im scared [n]")
+    INPUT = input()
+    getValidInput(INPUT , ["y","n"])
+    if INPUT == "n":
+        print("backing out ...")
+        print()
+        return
+    print("Welcome to the battle field: ")
+    listFriends(db, ID)
+    print("vs")
+    listEnemies(db, ID)
 
 
 def main():
@@ -176,6 +215,9 @@ def main():
                     elif key == 'ae':
                         makeEnemy(db, ID)
                         print()
+                    elif key == 'w':
+                        war(db,ID)
+                        print()
                 else:
                     break
             
@@ -184,5 +226,4 @@ def main():
             
 
 main()
-
 
