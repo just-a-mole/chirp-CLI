@@ -24,11 +24,12 @@ def getValidInput(INPUT,valid):
 def signUp(db):
     print("by signing up understand we will store your password as plain text.")
     print()
-    first_name = input("Enter First Name: ")
+    name = input("Enter Name: ")
     email = input("Enter Email: ")
     password = input("Enter Password: ")
-    db.createUser(email, password, first_name.lower().strip())
-    return db.getUserFromEmail(email,password) 
+    if db.createUser(email, password, name.lower().strip()):
+        return db.getUserFromEmail(email,password)
+    return
 
 def login(db):
     email = input("Enter Email: ")
@@ -150,7 +151,7 @@ def makeEnemy(db, ID):
         return
     print("Who would you like to add")
     name = input()
-    made = db.makeEnemy(name, ID)
+    made = db.makeEnemy(name.lower(), ID)
     if not made:
         print("You cant go to war with yourself / friends " )
 
@@ -190,6 +191,7 @@ def main():
         #######
         if ID:
             db.updateFriends(ID)
+            db.updateEnemies(ID)
             while True:
                 answer = mainPage(db,ID)
                 if answer == 'f':
@@ -224,7 +226,7 @@ def main():
                     break
             
         else:
-            print("login failed")
+            print("login failed or user already exists")
             
 
 main()

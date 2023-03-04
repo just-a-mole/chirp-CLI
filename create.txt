@@ -5,7 +5,7 @@ name TEXT
 CREATE TABLE credentials(
 user_id INTEGER UNIQUE,
 password TEXT,
-email TEXT,
+email TEXT UNIQUE,
 FOREIGN KEY(user_id) REFERENCES users(id)
 );
 CREATE TABLE friends(

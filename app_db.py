@@ -23,6 +23,25 @@ class App:
         except TypeError:
             return False
 
+    def updateEnemies(self,user_id):
+        data = [user_id, user_id]
+        new_enemies = self.mCursor.execute("""
+            SELECT DISTINCT e.enemy_id as friends_enemies_ids
+            FROM friends f
+            JOIN enemies e ON f.friend_id = e.user_id
+            WHERE f.user_id = ?  
+            AND e.enemy_id IS NOT NULL
+            AND e.enemy_id NOT IN (SELECT enemy_id FROM enemies WHERE user_id = ?);
+            """,data)
+        try:
+            new_enemies = new_enemies.fetchall()
+            for i in range(len(new_enemies)):
+                self.addEnemy(user_id,new_enemies[i][0])
+            return True
+        except TypeError:
+            return False
+
+
 
     def createUser(self, email, password, name):
         try:
@@ -31,12 +50,17 @@ class App:
             user_id += 1
         except:
             user_id = 1
-        data = [user_id,name]
-        self.mCursor.execute("INSERT INTO users (id, name) VALUES (?,?)",data)
-        self.mConnection.commit()
-        data = [user_id, password, email]
-        self.mCursor.execute("INSERT INTO credentials (user_id, password, email) VALUES (?,?,?)",data)
-        self.mConnection.commit()
+        try:
+            data = [user_id, password, email]
+            self.mCursor.execute("INSERT INTO credentials (user_id, password, email) VALUES (?,?,?)",data)
+            self.mConnection.commit()
+
+            data = [user_id,name]
+            self.mCursor.execute("INSERT INTO users (id, name) VALUES (?,?)",data)
+            self.mConnection.commit()
+            return True
+        except:
+            return False
 
     def createFriendPost(self, user_id, post, title):
         data = [user_id,post,title]

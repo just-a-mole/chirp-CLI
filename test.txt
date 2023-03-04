@@ -1,3 +1,7 @@
+                             /* NOTE: friends and enemies only update when the user logs in
+                             TO DO:
+                                    make it so that you can see your own posts of friends feed
+                            */
                              /*SELECT u.name, u.id
                              FROM users AS u
                              WHERE u.name IN (SELECT name FROM users WHERE id = 1 LIMIT 1)
@@ -44,6 +48,7 @@
 SELECT * FROM users;                                    
 SELECT * FROM friends;
 SELECT * FROM enemies;
+SELECT * FROM credentials;
 
 /*check if users has enemy by name*/
 SELECT e.enemy_id
@@ -59,3 +64,28 @@ JOIN(
 LIMIT 1;
 
 SELECT name FROM users WHERE id = 11;
+
+SELECT e.enemy_id AS ENEMYID
+FROM enemies as e
+WHERE e.user_id = 27;
+
+SELECT f.friend_id AS FRIENDID
+FROM friends as f
+WHERE f.user_id = 27;
+
+SELECT DISTINCT e.enemy_id as friends_enemies_ids
+FROM friends f
+JOIN enemies e ON f.friend_id = e.user_id
+WHERE f.user_id = 25
+AND e.enemy_id IS NOT NULL
+AND e.enemy_id NOT IN (SELECT enemy_id FROM enemies WHERE user_id = 25);
+
+SELECT f.user_id, fp.post, fp.title, fp.time
+FROM friends f
+INNER JOIN friend_posts fp ON f.friend_id = fp.user_id
+INNER JOIN users u ON u.id = f.user_id
+WHERE u.name = 'chaz'
+GROUP BY fp.post, fp.title, fp.time
+ORDER BY fp.time DESC;
+
+SELECT email, password FORM credentials WHERE user_id = 1;
