@@ -266,3 +266,44 @@ class App:
                                 ORDER BY ep.time DESC""",data)
         return self.mCursor.fetchall()
 
+#delete
+
+    def removeAccounts(self, name):
+        data = [name]
+# cascade is not working
+        self.mCursor.execute("""
+                            DELETE FROM credentials WHERE user_id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+        self.mCursor.execute("""
+                            DELETE FROM friends WHERE user_id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+        self.mCursor.execute("""
+                            DELETE FROM enemy_posts WHERE user_id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+        self.mCursor.execute("""
+                            DELETE FROM enemies WHERE user_id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+        self.mCursor.execute("""
+                            DELETE FROM enemies WHERE enemy_id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+        self.mCursor.execute("""
+                            DELETE FROM friend_posts WHERE user_id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+        self.mCursor.execute("""
+                            DELETE FROM users WHERE id IN(
+                                SELECT id FROM users
+                                WHERE name = ?)""",data)
+        self.mConnection.commit()
+

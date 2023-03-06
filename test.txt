@@ -1,6 +1,5 @@
                              /* NOTE: friends and enemies only update when the user logs in
                              TO DO:
-                                    make it so that you can see your own posts of friends feed
                             */
                              /*SELECT u.name, u.id
                              FROM users AS u
@@ -96,3 +95,5 @@ FROM friend_posts fp
 JOIN users u ON fp.user_id = u.id
 JOIN credentials AS c ON fp.user_id = c.user_id
 WHERE u.name IN (SELECT name FROM users WHERE id = 1);
+
+SELECT id FROM users WHERE name = "chaz";

@@ -1,4 +1,5 @@
 import app_db
+import random
 
 def loginPage():
     print("Welcome to Chirp CLI!")
@@ -79,6 +80,7 @@ def listFriends(db,ID):
             print(friends[i][0])
     else:
         print("you have no friends :(")
+    return friends
 
 def postFriends(db, ID):
     print("POST TO FRIENDS")
@@ -119,6 +121,7 @@ def listEnemies(db, ID):
             print(enemies[i][0])
     else:
         print("you dont have any enemies go add some!")
+    return enemies
 
 def postEnemies(db, ID):
     print("POST TO ENEMIES")
@@ -174,9 +177,21 @@ def war(db, ID):
         return
     print("Welcome to the battle field: ")
     print("you")
-    listFriends(db, ID)
+    f = [True] * (len(listFriends(db, ID))+1) # plus you
     print("vs")
-    listEnemies(db, ID)
+    e = [False] * len(listEnemies(db, ID))
+    war = f+e
+    youWin = random.choice(war)
+    if youWin:
+        print("YOU WIN!")
+        en = db.getEnemy(ID)[0]
+        db.removeAccounts(en)
+        return False
+    else:
+        print("YOU LOSE!")
+        yall = db.getName(ID)[0]
+        db.removeAccounts(yall)
+        return True
 
 
 def main():
@@ -190,7 +205,6 @@ def main():
             ID = signUp(db)
         #######
         if ID:
-            print("ID:",ID)
             db.updateFriends(ID)
             db.updateEnemies(ID)
             while True:
@@ -221,8 +235,9 @@ def main():
                         makeEnemy(db, ID)
                         print()
                     elif key == 'w':
-                        war(db,ID)
-                        print()
+                        x = war(db,ID)
+                        if x:
+                            break
                 else:
                     break
             
