@@ -88,4 +88,11 @@ WHERE u.name = 'chaz'
 GROUP BY fp.post, fp.title, fp.time
 ORDER BY fp.time DESC;
 
-SELECT email, password FORM credentials WHERE user_id = 1;
+SELECT email, password FROM credentials WHERE user_id = 1;
+SELECT * FROM friend_posts;
+
+SELECT fp.user_id,u.id, u.name, fp.post, fp.title, fp.time, c.email
+FROM friend_posts fp
+JOIN users u ON fp.user_id = u.id
+JOIN credentials AS c ON fp.user_id = c.user_id
+WHERE u.name IN (SELECT name FROM users WHERE id = 1);

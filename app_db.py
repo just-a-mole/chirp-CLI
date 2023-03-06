@@ -211,19 +211,28 @@ class App:
 
     def getFriendsFeed(self, user_id):
         data = [user_id]
-        self.mCursor.execute("""SELECT friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
-                            FROM friends
-                            JOIN friend_posts ON friends.friend_id = friend_posts.user_id
-                            JOIN users ON users.id = friend_posts.user_id
-                            JOIN credentials ON users.id = credentials.user_id
-                            WHERE users.name IN (
-                                SELECT users.name
-                                FROM users
-                                WHERE id = ?
-                                LIMIT 1
-                            )
-                            GROUP BY friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
-                            ORDER BY friend_posts.time DESC""",data)
+        self.mCursor.execute("""
+            SELECT fp.post, fp.title, fp.time, c.email
+            FROM friend_posts AS fp
+            JOIN users AS u ON fp.user_id = u.id
+            JOIN credentials AS c ON fp.user_id = c.user_id
+            WHERE u.name IN (SELECT name FROM users WHERE id = ?);
+            ORDER BY fp.time
+                             """,data)
+        #Chat failed us again!
+        # self.mCursor.execute("""SELECT friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
+        #                     FROM friends
+        #                     JOIN friend_posts ON friends.friend_id = friend_posts.user_id
+        #                     JOIN users ON users.id = friend_posts.user_id
+        #                     JOIN credentials ON users.id = credentials.user_id
+        #                     WHERE users.name IN (
+        #                         SELECT users.name
+        #                         FROM users
+        #                         WHERE id = ?
+        #                         LIMIT 1
+        #                     )
+        #                     GROUP BY friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
+        #                     ORDER BY friend_posts.time DESC""",data)
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):

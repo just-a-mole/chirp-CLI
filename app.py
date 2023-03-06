@@ -190,6 +190,7 @@ def main():
             ID = signUp(db)
         #######
         if ID:
+            print("ID:",ID)
             db.updateFriends(ID)
             db.updateEnemies(ID)
             while True:
