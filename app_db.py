@@ -216,7 +216,7 @@ class App:
             FROM friend_posts AS fp
             JOIN users AS u ON fp.user_id = u.id
             JOIN credentials AS c ON fp.user_id = c.user_id
-            WHERE u.name IN (SELECT name FROM users WHERE id = ?);
+            WHERE u.name IN (SELECT name FROM users WHERE id = ?)
             ORDER BY fp.time
                              """,data)
         #Chat failed us again!
