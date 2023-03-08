@@ -127,39 +127,7 @@ class App:
             print("Failed find ids")
             return True
         return True
-
-
-        # data = [ID]
-        # self.mCursor.execute(""" SELECT users.id
-        #                         FROM users 
-        #                         WHERE users.name IN(
-        #                             SELECT users.name
-        #                             FROM users
-        #                             WHERE users.id = ?
-        #                         )""", data)
-        # friends = self.mCursor.fetchall()
-        # try:
-        #     for i in range(len(friends)):
-        #         data = [name, friends[i][0]]
-        #         self.mCursor.execute("""SELECT users.id 
-        #                                 FROM users 
-        #                                 WHERE users.name = ? AND users.name NOT IN (
-        #                                     SELECT name 
-        #                                     FROM users 
-        #                                     WHERE users.id = ? 
-        #                                     LIMIT 1
-        #                                     )""", data)
-        #         users = self.mCursor.fetchall()
-        #         try:
-        #             for j in range(len(users)):
-        #                 print(users[j][0])
-        #                 self.addEnemy(ID, users[j][0])
-        #         except TypeError:
-        #             return None
-        # except TypeError:
-        #     return None
-
-
+        
     def addEnemy(self,user_id, enemy_id):
         data = [user_id, enemy_id]
         self.mCursor.execute("INSERT INTO enemies (user_id,enemy_id) VALUES (?,?)",data)
@@ -219,20 +187,6 @@ class App:
             WHERE u.name IN (SELECT name FROM users WHERE id = ?)
             ORDER BY fp.time
                              """,data)
-        #Chat failed us again!
-        # self.mCursor.execute("""SELECT friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
-        #                     FROM friends
-        #                     JOIN friend_posts ON friends.friend_id = friend_posts.user_id
-        #                     JOIN users ON users.id = friend_posts.user_id
-        #                     JOIN credentials ON users.id = credentials.user_id
-        #                     WHERE users.name IN (
-        #                         SELECT users.name
-        #                         FROM users
-        #                         WHERE id = ?
-        #                         LIMIT 1
-        #                     )
-        #                     GROUP BY friend_posts.post, friend_posts.title, friend_posts.time, credentials.email
-        #                     ORDER BY friend_posts.time DESC""",data)
         return self.mCursor.fetchall()
 
     def getEnemiesFeed(self, user_id):

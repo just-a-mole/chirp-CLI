@@ -94,25 +94,21 @@ def viewFriendsFeed(db,ID):
     print("FRIENDS FREED")
     feed = db.getFriendsFeed(ID)
     try:
+# 0 content
+# 1 title
+# 2 00:02:30
+# 3 chaz1@mail
         for post in feed:
-            email = post[0]
+            email = post[3]
             title = post[1]
-            content = post[2]
-            time = post[3]
+            content = post[0]
+            time = post[2]
             print(email, "POSTED: ")
             print("*"+title+"*")
             print(content)
             print("--"+time)
     except TypeError:
         print("no posts")
-
-
-    
-
-#note I think you can be eneies with a freind if war of last name friends are against someone that
-#has your first name ... thats probly fine
-
-#this is a way to do a switch statment in python, very useful in this case
 
 def listEnemies(db, ID):
     enemies = db.getEnemies(ID)
@@ -135,11 +131,15 @@ def viewEnemiesFeed(db,ID):
     print("ENEMIES FREED")
     feed = db.getEnemiesFeed(ID)
     try:
+# 0 content
+# 1 title
+# 2 23:58:07
+# 3 chaz1@mail 
         for post in feed:
-            email = post[0]
+            email = post[3]
             title = post[1]
-            content = post[2]
-            time = post[3]
+            content = post[0]
+            time = post[2]
             print(email, "POSTED: ")
             print("*"+title+"*")
             print(content)
