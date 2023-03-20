@@ -12,4 +12,11 @@ if you have an enemy, and you can declare war
                                |
                  user -----> name
 
-
+We made a Makefile to run all of tests to easily add and delete things in our database.
+Type "make" to start the program from python3
+Type "make populate" to add test users to the database
+Type "make nuke" to completely delete the database
+Type "make create" to add the schema to the database
+Type "make reset" to reset the database and populate it with users and posts.
+Type "make posts" to add posts to friends
+Type "make test" to have an easy way to test database queries
